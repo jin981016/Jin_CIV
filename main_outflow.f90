@@ -16,6 +16,7 @@ use atom_mod
 use clumps_mod
 use clumpy_RT_mod
 use dust_mod
+use data_mod
 implicit none
 
 integer, parameter :: nphoton_emit = 5.0e2
@@ -123,7 +124,8 @@ v_emit(11)  = 900.d5     ! cm/s
 v_emit(12)  = 1000.d5     ! cm/s
 
 
-N_atom(1) = 0.d0	! cm^-2
+N_atom(1) = 1.d11	! cm^-2
+
 N_atom(2) = 2.d12	! cm^-2
 N_atom(3) = 3.2d12	! cm^-2
 N_atom(4) = 5.d12	! cm^-2
@@ -165,14 +167,14 @@ itau_d = 1
 do iv_emit = 1,1
 do iv_ran = 1,1
 do iv_exp =1,1
-do iN_atom = 1,11
+do iN_atom = 1,1
 
 
 
 
 call set_escape_observer()
 call set_dust('dust_data/MW_C_IV.dat')
-	write(fn_model,100) '/home/jln/RT_code/data_CIV/N_atom',N_atom(iN_atom), &
+	write(fn_model,100) 'data_CIV/N_atom',N_atom(iN_atom), &
 					'_Vexp', v_exp(iv_exp)/1e5, &
 					'_Vemit', v_emit(iv_emit)/1e5, &
 					'_tauD', tau_d(itau_d), &
@@ -199,6 +201,7 @@ call init_random_seed()
 call MPI_BARRIER(MPI_COMM_WORLD,err)
 
 !call set_grid_empty
+call initialize_data() ! 내가 추가한 term
 call set_grid_cloudy(N_atom(iN_atom), v_ran(iv_ran), v_exp(iv_exp), tau_d(itau_d))
 if(mpar%rank .eq. master) then
 print*,'set_grid_done'
@@ -268,7 +271,7 @@ call init_random_seed()
 !	print*,rank,'slave'
         if (status(MPI_TAG) .eq.  0) exit
 	ans = 1
-
+	
 	call gen_photon_cloudy(photon,v_emit(iv_emit))
 	call peeling_off_direct_metal(photon)
 
@@ -316,6 +319,7 @@ call reduce_escape_observer()
 call MPI_BARRIER(MPI_COMM_WORLD,err)
 call write_escape_observer()
 call MPI_BARRIER(MPI_COMM_WORLD,err)
+
 
 call clear_grid()
 call clear_escape_observer()

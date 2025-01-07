@@ -2,6 +2,7 @@ module grid_mod
 use cons
 use random
 use interpolate
+use data_mod
 use mpi
 use memory_mod
 implicit none
@@ -18,7 +19,6 @@ public set_grid_cloudy
 contains
 
 subroutine clear_grid()
-
 
 call destroy_mem(grid%den)
 call destroy_mem(grid%den_d)
@@ -132,6 +132,7 @@ end subroutine set_grid_empty
 
 subroutine set_grid_cloudy(N_HI,v_ran,v_exp,tau_d)
 use cons
+use data_mod
 use interpolate
 real(kind=rkd) :: vx,vy,vz
 real(kind=rkd) :: Xmin,Xmax,Ymax,Ymin,Zmin,Zmax
@@ -141,36 +142,19 @@ real(kind=rkd) :: temp3
 real(kind=rkd) :: x,y,z 
 real(kind=rkd) :: dx,dy,dz 
 real(kind=rkd) :: den0 
-real(kind=rkd) :: R
+real(kind=rkd) :: R , per
 real(kind=rkd) :: v_th, tau_d0, dnu_th
 real(kind=rkd), intent(in) :: tau_d, N_HI, v_ran, v_exp
 integer :: ix,iy,iz
-character :: line_int*200
-character :: fn_int*200
-integer :: i, j, nline_int, num, count
-real(kind=rkd), allocatable :: r_int(:), e_int(:), den_int(:), emit_int(:)
+integer :: count
+
 
 
 
 !       initial position
 !	read cloudy output
-fn_int = 'CIV_interpolate.txt'
-open(31, file=fn_int)
-read(31, *) line_int
-do j = 1, 3000000
-    read(31, *, end=200) line_int
-end do
-200 continue
-print *, j  ! number of lines + 1
-close(31)
 
-nline_int = j - 1
-allocate(r_int(nline_int))
-allocate(e_int(nline_int))
-allocate(den_int(nline_int))
-allocate(emit_int(nline_int))
-R = 100.d0*kpc 
-
+R = 100.d0*kpc
 
 
 grid%N_XYZ = 300
@@ -194,6 +178,8 @@ Zmin = -grid%Ro
 dZ = (Zmax - Zmin)/(grid%N_Z) 
 
 grid%max_len = sqrt(dX**2 + dY**2 + dZ**2)
+
+count = 0
 
 call make_grid()
 
@@ -238,8 +224,9 @@ if(mpar%h_rank .eq. master) then
 !	linear interpolarization den_cloudy(radius)
 
 !        if(temp1 .ge. grid%Ri .and. temp1 .le. grid%Ro) then
+!	print*, 3, radius, grid%Ro
         if(radius .le. grid%Ro) then
-
+!	print*, 4, radius, grid%Ro	
 
         grid%den_d(ix,iy,iz) = tau_d / (dust%Cext*(1.d0-dust%albedo)) /(grid%Ro-grid%Ri)
         grid%vx(ix,iy,iz) = (x/grid%Ro)*v_exp
@@ -248,9 +235,10 @@ if(mpar%h_rank .eq. master) then
 
 
         !grid%den(ix,iy,iz) = N_HI/(grid%Ro-grid%Ri)
-        temp1 = radius/kpc
-        grid%den(ix,iy,iz) = find_y(temp1, r_int, den_int, 0.0005d0) 
-
+        temp1 = radius / kpc
+        grid%den(ix,iy,iz) = find_den(temp1) 
+	count = (count+1)
+	!print*, per
         endif
 
 
@@ -258,7 +246,7 @@ if(mpar%h_rank .eq. master) then
         enddo
         enddo
 
-
+print*, count
 
 endif
 
@@ -278,12 +266,12 @@ real(kind=rkd) :: temp3
 real(kind=rkd) :: x,y,z 
 real(kind=rkd) :: dx,dy,dz 
 real(kind=rkd) :: den0 
-real(kind=rkd) :: R
+real(kind=rkd) :: R 
 real(kind=rkd) :: v_th, tau_d0, dnu_th
 real(kind=rkd), intent(in) :: tau_d, N_HI, v_ran, v_exp
-integer :: ix,iy,iz
+integer :: ix,iy,iz , count
 
-R = 1.d0
+R = 100.d0 
 
 
 
@@ -309,6 +297,7 @@ dZ = (Zmax - Zmin)/(grid%N_Z)
 
 grid%max_len = sqrt(dX**2 + dY**2 + dZ**2)
 
+count = 0
 call make_grid()
 
 if(mpar%h_rank .eq. master) then
@@ -358,6 +347,8 @@ if(mpar%h_rank .eq. master) then
 
 
         grid%den(ix,iy,iz) = N_HI/(grid%Ro-grid%Ri)
+        count = count + 1
+	!print*, temp1
 
         endif
 
@@ -366,7 +357,7 @@ if(mpar%h_rank .eq. master) then
         enddo
         enddo
 
-
+print*, count
 endif
 
 

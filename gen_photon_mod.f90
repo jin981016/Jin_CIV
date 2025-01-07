@@ -4,6 +4,7 @@ use random
 use interpolate
 use voigt_mod
 use mpi
+use data_mod
 implicit none
 public
 
@@ -74,6 +75,8 @@ end subroutine initial_photon
 
 subroutine gen_photon_cloudy(photon, v_emit)
 use random
+use data_mod
+use interpolate
 implicit none
 type(photon_type) :: photon
 real(kind=rkd), intent(in) :: v_emit
@@ -82,57 +85,29 @@ real(kind=rkd) vel
 real(kind=rkd) temp
 real(kind=rkd) :: v_th
 
-character :: line_int*200
-character :: fn_int*200
-integer :: i, j, nline_int, num, count
+character :: fn_int
+integer :: count
 real(kind=rkd) :: radius, emit, den, dx
-real(kind=rkd), allocatable :: r_int(:), e_int(:), den_int(:), emit_int(:)
-real(kind=rkd) :: p_max, tt, px
+real(kind=rkd), allocatable :: x_i(:), y_i(:), z_i(:), accept(:), radius_rand(:)
+real(kind=rkd) :: px
 real(kind=rkd) :: r0, r1, r2, cost, sint, sinp, cosp,r_cloudy
 real(kind=rkd) :: theta, phi
 
 
 !       initial position
 !	read cloudy output
-	fn_int = 'CIV_interpolate.txt'
-        open(31, file=fn_int)
-        read(31, *) line_int
-        do j = 1, 3000000
-            read(31, *, end=200) line_int
-        end do
-    200 continue
-        print *, j  ! number of lines + 1
-        close(31)
-
-        nline_int = j - 1
-        allocate(r_int(nline_int))
-        allocate(e_int(nline_int))
-        allocate(den_int(nline_int))
-        allocate(emit_int(nline_int))
-
-        open(31, file=fn_int)
-        do i = 1, nline_int
-            read(31, *) r_int(i), e_int(i), den_int(i)
-        end do
-        close(31)
-
-        tt = sum(e_int)
-        do i = 1, nline_int
-            emit_int(i) = e_int(i) / tt
-        end do
-
-        p_max = maxval(emit_int)
-
-!	r_cloudy using rejection method
-! while ..?
+	!fn_int = 'CIV_interpolate.txt'
+	!call initialize_data()      
+	!print*, "test" , p_max
         do
 	    r1 = rand_number()
 	    r2 = rand_number()	
             r_cloudy = r1 * 100 
-            dx = 0.0005d0
-            px = find_y(r_cloudy, r_int, emit_int, dx)
+            px = find_px(r_cloudy)
+           ! print*, r2 , px/p_max
             if (r2 <= px / p_max) exit
         end do
+        !print*, r2 , px/p_max
         phi = pi / 2.0 * (rand_number() * 2.0 - 1.0)
         theta = 2.0 * pi * rand_number()
         sinp = sin(phi)
@@ -166,6 +141,7 @@ real(kind=rkd) :: theta, phi
 	photon%line = 2
 	endif
 
+
 call initial_photon(photon)
 
 
@@ -178,6 +154,8 @@ end subroutine gen_photon_cloudy
 
 subroutine gen_photon_Gaussian(photon, v_emit)
 !use random
+!use data_mod
+!use interpolate
 implicit none
 type(photon_type) :: photon
 real(kind=rkd), intent(in) :: v_emit
@@ -185,9 +163,11 @@ real(kind=rkd) vx,vy,vz
 real(kind=rkd) vel 
 real(kind=rkd) temp
 real(kind=rkd) :: v_th
+!character :: fn_int*200
 
-
-
+	!fn_int = 'CIV_interpolate.txt'
+	!call initialize_data(fn_int)      
+	!print*, "test" , p_max
 !       initial position
         photon%x = 0.d0
         photon%y = 0.d0
