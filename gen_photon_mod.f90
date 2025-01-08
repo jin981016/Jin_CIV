@@ -103,7 +103,7 @@ real(kind=rkd) :: theta, phi
 	    r1 = rand_number()
 	    r2 = rand_number()	
             r_cloudy = r1 * 100 
-            px = find_px(r_cloudy)
+            px = find_y(r_cloudy,r_int,px_int)
            ! print*, r2 , px/p_max
             if (r2 <= px / p_max) exit
         end do

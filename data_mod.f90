@@ -2,10 +2,10 @@ module data_mod
     implicit none
 
     ! public 변수 선언
-    public :: r_int, e_int, den_int, emit_int, p_max, initialize_data, tt
+    public :: r_int, e_int, den_int, px_int, p_max, initialize_data, tt
 
     ! 전역 변수 및 배열
-    real(8), allocatable :: r_int(:), e_int(:), den_int(:), emit_int(:)
+    real(8), allocatable :: r_int(:), e_int(:), den_int(:), px_int(:)
     real(8) :: tt, p_max
 
 contains
@@ -15,8 +15,8 @@ contains
         implicit none
         character :: filename*200
         character(len=200) :: line_int
-        integer :: i, j, nline_int
-	filename = 'CIV_interpolate.txt'
+        integer :: i, j, nline_int, line_number
+	filename = 'CIV_cloudy.txt'
         ! 파일 열기
         open(31, file=filename)
 
@@ -30,12 +30,12 @@ contains
         close(31)
 
         nline_int = j - 1
-
+	
         ! 배열 할당
         allocate(r_int(nline_int))
         allocate(e_int(nline_int))
         allocate(den_int(nline_int))
-        allocate(emit_int(nline_int))
+        allocate(px_int(nline_int))
 
         ! 데이터 읽기
         open(31, file=filename)
@@ -47,9 +47,9 @@ contains
         ! emit_int 계산 및 p_max 설정
         tt = sum(e_int)
         do i = 1, nline_int
-            emit_int(i) = e_int(i) / tt
+            px_int(i) = e_int(i) / tt
         end do
-        p_max = maxval(emit_int)
+        p_max = maxval(px_int)
 
     end subroutine initialize_data
 
