@@ -108,15 +108,15 @@ real(kind=rkd) :: theta, phi
             if (r2 <= px / p_max) exit
         end do
         !print*, r2 , px/p_max
-        phi = pi / 2.0 * (rand_number() * 2.0 - 1.0)
+        phi = pi * rand_number()
         theta = 2.0 * pi * rand_number()
         sinp = sin(phi)
         cosp = cos(phi)
         sint = sin(theta)
         cost = cos(theta)
-        photon%x = r_cloudy * sint * sinp *kpc
-        photon%y = r_cloudy * sint * cosp * kpc
-        photon%z = r_cloudy * cost *kpc
+        photon%x = r_cloudy * sinp * sint *kpc
+        photon%y = r_cloudy * sinp * cost * kpc
+        photon%z = r_cloudy * cosp *kpc
         
 !       
         photon%ix = int((photon%x - grid%X(1))/(grid%X(grid%N_X+1) - grid%X(1))*grid%N_X) + 1
