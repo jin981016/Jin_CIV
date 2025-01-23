@@ -19,7 +19,7 @@ use dust_mod
 use data_mod
 implicit none
 
-integer, parameter :: nphoton_emit = 1.0d7
+integer, parameter :: nphoton_emit = 1.0d6
 integer :: nphoton_flat
 !	MAIN
 integer, parameter :: nN_atom = 26, nv_exp = 14, nv_ran = 14, ntau_d = 2
@@ -101,7 +101,7 @@ tau_D(1) = 0.d0
 v_exp(1)  = 0.d5	! cm/s
 v_exp(2)  = 300.d5
 v_exp(3)  = 600.d5	! cm/s
-v_exp(4)  = 00.d5	! cm/s
+v_exp(4)  = 900.d5	! cm/s
 
 
 v_exp(5)  = 300.d5

@@ -114,8 +114,8 @@ real(kind=rkd) :: theta, phi
         cosp = cos(phi)
         sint = sin(theta)
         cost = cos(theta)
-        photon%x = r_cloudy * sinp * sint *kpc
-        photon%y = r_cloudy * sinp * cost * kpc
+        photon%x = r_cloudy * sinp * cost *kpc
+        photon%y = r_cloudy * sinp * sint * kpc
         photon%z = r_cloudy * cosp *kpc
         
 !       

@@ -40,7 +40,7 @@ call create_shared_mem( escape%Q_spec , [2,escape%nspec])
 call create_shared_mem( escape%U_spec , [2,escape%nspec])
 call create_shared_mem( escape%V_spec , [2,escape%nspec])
 
-escape%nR = 500
+escape%nR = 100
 call create_shared_mem( escape%I_r   , [3,escape%nR])
 call create_shared_mem( escape%Q_r   , [3,escape%nR])
 call create_shared_mem( escape%U_r   , [3,escape%nR])
@@ -345,7 +345,7 @@ if(mpar%rank .eq. master) then
 
 	do iR = 1, escape%nR
 
-	R = (iR - 1.d0)/(escape%nR - 1.d0) * 100*kpc
+	R = (iR - 1.d0)/(escape%nR - 1.d0)
 
 		        if(iR .eq. 1) then
 		        sb_r = escape%I_r(:,iR)/(pi*(0.5d0*dR)**2)
