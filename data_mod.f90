@@ -30,6 +30,12 @@ contains
         close(31)
 
         nline_int = j - 1
+        
+        
+         if (allocated(r_int)) deallocate(r_int)
+    	 if (allocated(e_int)) deallocate(e_int)
+   	 if (allocated(den_int)) deallocate(den_int)
+   	 if (allocated(px_int)) deallocate(px_int)
 	
         ! 배열 할당
         allocate(r_int(nline_int))

@@ -19,7 +19,7 @@ use dust_mod
 use data_mod
 implicit none
 
-integer, parameter :: nphoton_emit = 1.0d7
+integer, parameter :: nphoton_emit = 1.0d6
 integer :: nphoton_flat
 !	MAIN
 integer, parameter :: nN_atom = 26, nv_exp = 14, nv_ran = 14, ntau_d = 2
@@ -28,6 +28,7 @@ real(kind=rkd) :: N_atom_min, N_atom_max, dN_atom
 real(kind=rkd) :: tau_d_min, tau_d_max, dtau_d
 integer :: iN_atom, iv_exp, iv_ran, itau_d
 !	clumps parameter
+
 integer, parameter :: nf_c = 1, nr_cl = 1, nv_cl = 1
 real(kind=rkd) :: f_c(nf_c), r_cl(nr_cl), v_cl(nv_cl)
 integer :: if_c, ir_cl, iv_cl
