@@ -108,7 +108,7 @@ real(kind=rkd) :: theta, phi
             if (r2 <= px / p_max) exit
         end do
         !print*, r2 , px/p_max
-        phi = pi * rand_number()
+        phi = acos(1.0 - 2.0 * rand_number())
         theta = 2.0 * pi * rand_number()
         sinp = sin(phi)
         cosp = cos(phi)
