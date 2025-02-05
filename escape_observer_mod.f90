@@ -40,7 +40,7 @@ call create_shared_mem( escape%Q_spec , [2,escape%nspec])
 call create_shared_mem( escape%U_spec , [2,escape%nspec])
 call create_shared_mem( escape%V_spec , [2,escape%nspec])
 
-escape%nR = 500
+escape%nR = 70
 call create_shared_mem( escape%I_r   , [3,escape%nR])
 call create_shared_mem( escape%Q_r   , [3,escape%nR])
 call create_shared_mem( escape%U_r   , [3,escape%nR])
