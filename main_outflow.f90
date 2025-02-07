@@ -19,7 +19,7 @@ use dust_mod
 use data_mod
 implicit none
 
-integer, parameter :: nphoton_emit = 1.0d6
+integer, parameter :: nphoton_emit = 1.0d8
 integer :: nphoton_flat
 !	MAIN
 integer, parameter :: nN_atom = 26, nv_exp = 14, nv_ran = 14, ntau_d = 2
@@ -179,7 +179,7 @@ do iN_atom = 1,1
 
 call set_escape_observer()
 call set_dust('dust_data/MW_C_IV.dat')
-	write(fn_model,100) 'data_test/N_atom',N_atom(iN_atom), &
+	write(fn_model,100) 'data_CIV/N_atom',N_atom(iN_atom), &
 					'_Vexp', v_exp(iv_exp)/1e5, &
 					'_Vemit', v_emit(iv_emit)/1e5, &
 					'_tauD', tau_d(itau_d), &
