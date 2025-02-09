@@ -236,8 +236,8 @@ if(mpar%h_rank .eq. master) then
 
         !grid%den(ix,iy,iz) = N_HI/(grid%Ro-grid%Ri)
         temp1 = radius / kpc
-        !grid%den(ix,iy,iz) = find_y(temp1,r_int,den_int) 
-	grid%den(ix,iy,iz) = 0 ! test_Version
+        grid%den(ix,iy,iz) = find_y(temp1,r_int,den_int) 
+	!grid%den(ix,iy,iz) = 0 ! test_Version
 !	count = (count+1)
 	!print*, per
         endif
