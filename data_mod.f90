@@ -16,7 +16,7 @@ contains
         character :: filename*200
         character(len=200) :: line_int
         integer :: i, j, nline_int, line_number
-	filename = 'HeII_cloudy.txt'
+	filename = 'CIV_cloudy.txt'
         ! 파일 열기
         open(31, file=filename)
 

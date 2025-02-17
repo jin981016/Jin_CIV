@@ -102,18 +102,17 @@ real(kind=rkd) :: theta, phi
         do
 	    r1 = rand_number()
 	    r2 = rand_number()	
-            r_cloudy = r1 * 100 
+            r_cloudy = r1**(1.d0/ 3.d0) * 100 
             px = find_y(r_cloudy,r_int,px_int)
            ! print*, r2 , px/p_max
             if (r2 <= px / p_max) exit
         end do
         !print*, r2 , px/p_max
-        theta = pi/2.0 * (rand_number()*2 -1.0)
-        phi = 2.0 * pi * rand_number()
-        sinp = sin(phi)
-        cosp = cos(phi)
-        sint = sin(theta)
-        cost = cos(theta)
+        cost = 2.d0*rand_number() - 1.d0
+        phi = 2.d0*pi*rand_number()
+	sint = sqrt(1.d0 - cost**2)
+	cosp = cos(phi)
+	sinp = sin(phi)
         photon%x = r_cloudy * sint * cosp *kpc
         photon%y = r_cloudy * sint * sinp * kpc
         photon%z = r_cloudy * cost *kpc
